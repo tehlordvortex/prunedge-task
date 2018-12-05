@@ -1,8 +1,9 @@
 .Feed {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   flex: 1 1 auto;
   padding: 1rem;
+  justify-content: center;
 }
 
 .Feed-spinner-wrapper {

@@ -50,10 +50,11 @@ class Feed extends Component {
           })
         }
         const newItems = response.articles.map(article => ({
+          url: article.url,
           title: article.title,
           image: article.urlToImage,
           summary: article.description,
-          category: article.source.name
+          source: article.source.name
         }))
         this.setState(prevState => ({
           loading: false,
@@ -73,9 +74,10 @@ class Feed extends Component {
         <div className="Feed">
             {items.map((item, index) => (
               <FeedItem
+                url={item.url}
                 image={item.image}
                 title={item.title}
-                category={item.category}
+                category={item.source}
                 summary={item.summary}
                 key={index}
               />
