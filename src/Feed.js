@@ -9,7 +9,9 @@ class Feed extends Component {
     this.state = {
       loading: false,
       items: [],
-      itemsLoaded: 0
+      itemsLoaded: 0,
+      page: 0,
+      totalItems: 0
     }
   }
   componentDidMount() {
@@ -29,25 +31,40 @@ class Feed extends Component {
   _loadMoreItems = () => {
     // todo: fetch from api
     if (this.state.loading) return
-    const itemsToLoad = 10
-    const fakeItem = {
-      title: 'Lorem Ipsum',
-      summary: 'Minim est dolore commodo nostrud culpa Lorem. Exercitation laborum consectetur...',
-      category: 'Technology'
-    }
+    if (this.state.itemsLoaded && this.state.itemsLoaded === this.state.totalItems) return
     this.setState({
       loading: true
     })
-    setTimeout(() => {
-      const newItems = Array.from({ length: itemsToLoad }).map(() => ({...fakeItem}))
-      this.setState(prevState => ({
-        loading: false,
-        items: [
-          ...prevState.items,
-          ...newItems
-        ]
-      }))
-    }, 2000)
+    const itemsToLoad = 10
+    const url = `https://newsapi.org/v2/everything?q=ReactJS&apiKey=${process.env.REACT_APP_API_KEY}&page=${this.state.page+1}&pageSize=${itemsToLoad}`
+    const req = new Request(url)
+    fetch(req)
+      .then((response) => response.json())
+      .then((response) => {
+        const resultCount = response.totalResults
+        if (!this.state.totalItems) {
+          this.setState({
+            totalItems: resultCount,
+            page: 1,
+            itemsLoaded: itemsToLoad
+          })
+        }
+        const newItems = response.articles.map(article => ({
+          title: article.title,
+          image: article.urlToImage,
+          summary: article.description,
+          category: article.source.name
+        }))
+        this.setState(prevState => ({
+          loading: false,
+          items: [
+            ...prevState.items,
+            ...newItems
+          ],
+          itemsLoaded: prevState.itemsLoaded + newItems.length,
+          page: prevState.page + 1
+        }))
+      })
   }
   render() {
     const { items } = this.state
@@ -56,6 +73,7 @@ class Feed extends Component {
         <div className="Feed">
             {items.map((item, index) => (
               <FeedItem
+                image={item.image}
                 title={item.title}
                 category={item.category}
                 summary={item.summary}
