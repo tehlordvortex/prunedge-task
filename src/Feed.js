@@ -77,7 +77,7 @@ class Feed extends Component {
                 url={item.url}
                 image={item.image}
                 title={item.title}
-                category={item.source}
+                source={item.source}
                 summary={item.summary}
                 key={index}
               />

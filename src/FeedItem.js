@@ -21,7 +21,7 @@ class FeedItem extends Component {
 
         <div className="FeedItem-text">
           <h5 className="FeedItem-text_title">{title}</h5>
-          <small className="FeedItem-text_category">From <b>sourcey}</b></small>
+          <small className="FeedItem-text_category">From <b>{source}</b></small>
           <p className="FeedItem-text_summary">{summary}</p>
         </div>
       </a>
